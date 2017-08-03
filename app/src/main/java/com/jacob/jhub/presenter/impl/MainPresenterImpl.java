@@ -100,6 +100,8 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     @Override
     public void onListRequestRefresh() {
         if (!mIsListLoading) {
+            if (mProfile == null)
+                updateProfile();
             mCurrentPage = 1;
             mRepositories.clear();
             updateRepositories(mCurrentPage);
