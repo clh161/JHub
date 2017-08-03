@@ -2,8 +2,10 @@ package com.jacob.jhub.view.impl;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jacob.jhub.R;
 import com.jacob.jhub.injection.AppComponent;
 import com.jacob.jhub.injection.DaggerMainViewComponent;
@@ -23,6 +25,8 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     @Inject
     PresenterFactory<MainPresenter> mPresenterFactory;
 
+    @BindView(R.id.avatar)
+    ImageView mAvatar;
     @BindView(R.id.name)
     TextView mName;
     @BindView(R.id.repoCount)
@@ -55,5 +59,6 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     public void updateProfile(Profile profile) {
         mName.setText(profile.getName());
         mRepoCount.setText(getResources().getString(R.string.repo_count_prefix) + profile.getPublicRepos());
+        Glide.with(this).load(profile.getAvatarUrl()).into(mAvatar);
     }
 }
