@@ -1,6 +1,7 @@
 package com.jacob.jhub.injection;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 
 import com.jacob.jhub.JHub;
 import com.jacob.jhub.api.GitHubService;
@@ -17,4 +18,6 @@ public interface AppComponent {
     JHub getApp();
 
     GitHubService provideGitHubService();
+
+    ConnectivityManager provideConnectivityManager();
 }
