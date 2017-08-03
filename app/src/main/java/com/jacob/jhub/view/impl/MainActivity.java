@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,8 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     RecyclerView mList;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
     private RepositoryAdapter mAdapter = new RepositoryAdapter();
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -54,7 +58,10 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
         mLinearLayoutManager = new LinearLayoutManager(this);
         mList.setLayoutManager(mLinearLayoutManager);
         mList.setAdapter(mAdapter);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.onListRequestRefresh());
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mPresenter.onListRequestRefresh();
+        });
         mList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView,
@@ -97,7 +104,7 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
 
     @Override
     public void setListLoading(boolean loading) {
-        mSwipeRefreshLayout.setRefreshing(loading);
+        mProgressBar.setVisibility(loading ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
