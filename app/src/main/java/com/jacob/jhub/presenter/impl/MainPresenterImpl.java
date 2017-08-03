@@ -56,7 +56,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
 
             @Override
             public void onFailture(Exception e) {
-                setListLoading(mIsListLoading);
+                setListLoading(false);
                 onHttpError(e);
             }
         });
