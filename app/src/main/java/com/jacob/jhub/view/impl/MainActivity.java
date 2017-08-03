@@ -2,18 +2,24 @@ package com.jacob.jhub.view.impl;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jacob.jhub.R;
+import com.jacob.jhub.adapter.RepositoryAdapter;
 import com.jacob.jhub.injection.AppComponent;
 import com.jacob.jhub.injection.DaggerMainViewComponent;
 import com.jacob.jhub.injection.MainViewModule;
 import com.jacob.jhub.model.Profile;
+import com.jacob.jhub.model.Repository;
 import com.jacob.jhub.presenter.MainPresenter;
 import com.jacob.jhub.presenter.loader.PresenterFactory;
 import com.jacob.jhub.view.MainView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,13 +37,17 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     TextView mName;
     @BindView(R.id.repoCount)
     TextView mRepoCount;
+    @BindView(R.id.list)
+    RecyclerView mList;
+    private RepositoryAdapter mAdapter = new RepositoryAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        mList.setLayoutManager(new LinearLayoutManager(this));
+        mList.setAdapter(mAdapter);
     }
 
     @Override
@@ -60,5 +70,11 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
         mName.setText(profile.getName());
         mRepoCount.setText(getResources().getString(R.string.repo_count_prefix) + profile.getPublicRepos());
         Glide.with(this).load(profile.getAvatarUrl()).into(mAvatar);
+    }
+
+    @Override
+    public void setRepositories(List<Repository> repositories) {
+        mAdapter.setItems(repositories);
+        mAdapter.notifyDataSetChanged();
     }
 }

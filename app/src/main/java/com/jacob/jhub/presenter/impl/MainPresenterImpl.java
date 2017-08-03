@@ -40,6 +40,8 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
         mInteractor.getRepositories(mOrgName, page, new HttpResponse<List<Repository>>() {
             @Override
             public void onSuccess(List<Repository> repositories) {
+                if (mView != null)
+                    mView.setRepositories(repositories);
             }
 
             @Override
