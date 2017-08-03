@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JHub</string>
+    <string name="repo_count_prefix">Repositories:</string>
 </resources>

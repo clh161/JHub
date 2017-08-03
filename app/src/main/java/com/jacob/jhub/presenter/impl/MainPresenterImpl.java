@@ -54,7 +54,8 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
         mInteractor.getProfile(mOrgName, new HttpResponse<Profile>() {
             @Override
             public void onSuccess(Profile profile) {
-
+                if (mView != null)
+                    mView.updateProfile(profile);
             }
 
             @Override
