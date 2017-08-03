@@ -35,9 +35,14 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
         super.onStart(viewCreated);
         //In case a async http call finishes while the app is on background and unable to update the view, this setListLoading may update the view once it comes back to foreground
         setListLoading(mIsListLoading);
+        //Load profile on resume. This avoids the problem when network is not available on init and fail to
+        if (mProfile == null)
+            updateProfile();
+        else
+            //update profile on resume. This avoids problem that when http call finishes but the app is not on foreground and unable to set profile to view.
+            mView.updateProfile(mProfile);
         if (viewCreated) {
             mCurrentPage = 1;
-            updateProfile();
             updateRepositories(mCurrentPage);
         }
     }
