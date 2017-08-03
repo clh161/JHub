@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jacob.jhub.R;
@@ -85,5 +86,10 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     @Override
     public void setListLoading(boolean loading) {
         mSwipeRefreshLayout.setRefreshing(loading);
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

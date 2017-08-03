@@ -15,4 +15,6 @@ public interface MainView {
     void setRepositories(List<Repository> repositories);
 
     void setListLoading(boolean loading);
+
+    void showToast(String message);
 }

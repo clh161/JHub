@@ -52,8 +52,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
             @Override
             public void onFailture(Exception e) {
                 setListLoading(mIsListLoading);
-                if (e.getMessage() != null)
-                    Log.e(getClass().getSimpleName(), e.getMessage());
+                onHttpError(e);
             }
         });
     }
@@ -74,9 +73,17 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
 
             @Override
             public void onFailture(Exception e) {
-                Log.e(getClass().getSimpleName(), e.getMessage());
+                onHttpError(e);
             }
         });
+    }
+
+    private void onHttpError(Exception e) {
+        if (e.getMessage() != null) {
+            Log.e(getClass().getSimpleName(), e.getMessage());
+            if (mView != null)
+                mView.showToast(e.getMessage());
+        }
     }
 
     @Override
