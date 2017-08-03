@@ -47,6 +47,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
             @Override
             public void onSuccess(List<Repository> repositories) {
                 setListLoading(false);
+                mCurrentPage++;
                 mRepositories.addAll(repositories);
                 if (mView != null)
                     mView.setRepositories(mRepositories);
@@ -101,7 +102,6 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     @Override
     public void onListScroll(int totalItemCount, int lastVisibleItem) {
         if (!mIsListLoading && totalItemCount <= (lastVisibleItem + mListLoadMoreThreshold)) {
-            mCurrentPage++;
             updateRepositories(mCurrentPage);
         }
     }
