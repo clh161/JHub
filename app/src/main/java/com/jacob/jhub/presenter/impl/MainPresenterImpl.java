@@ -23,6 +23,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     private boolean mIsListLoading = false;
     private int mListLoadMoreThreshold = 5;
     private List<Repository> mRepositories = new ArrayList<>();
+    private Profile mProfile;
 
     @Inject
     public MainPresenterImpl(@NonNull MainInteractor interactor) {
@@ -71,6 +72,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
         mInteractor.getProfile(mOrgName, new HttpResponse<Profile>() {
             @Override
             public void onSuccess(Profile profile) {
+                mProfile = profile;
                 if (mView != null)
                     mView.updateProfile(profile);
             }
@@ -101,8 +103,10 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
 
     @Override
     public void onListScroll(int totalItemCount, int lastVisibleItem) {
-        if (!mIsListLoading && totalItemCount <= (lastVisibleItem + mListLoadMoreThreshold)) {
-            updateRepositories(mCurrentPage);
-        }
+        //Stop fetching more when all repos have been fetched
+        if (mProfile == null || mRepositories.size() < mProfile.getPublicRepos())
+            if (!mIsListLoading && totalItemCount <= (lastVisibleItem + mListLoadMoreThreshold)) {
+                updateRepositories(mCurrentPage);
+            }
     }
 }
