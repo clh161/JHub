@@ -17,6 +17,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -60,6 +61,15 @@ public class MainPresenterImplTest {
     public void fetchRepositoryOnInit() throws Exception {
         verify(mInteractor).getRepositories(eq("facebook"), eq(1), any(HttpResponse.class));
         verify(mView).setRepositories(any());
+    }
+
+    @Test
+    public void loadingTest() throws Exception {
+        verify(mView).setListLoading(eq(true));
+        verify(mView, times(2)).setListLoading(eq(false));
+        mPresenter.onListRequestRefresh();
+        verify(mView, times(2)).setListLoading(eq(true));
+        verify(mView, times(3)).setListLoading(eq(false));
     }
 
 }
