@@ -18,15 +18,11 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     @Inject
     PresenterFactory<MainPresenter> mPresenterFactory;
 
-    // Your presenter is available using the mPresenter variable
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Your code here
-        // Do not call mPresenter from here, it will be null! Wait for onStart or onPostCreate.
     }
 
     @Override

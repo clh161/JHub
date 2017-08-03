@@ -3,6 +3,7 @@ package com.jacob.jhub.injection;
 import android.content.Context;
 
 import com.jacob.jhub.JHub;
+import com.jacob.jhub.api.GitHubService;
 
 import javax.inject.Singleton;
 
@@ -14,4 +15,6 @@ public interface AppComponent {
     Context getAppContext();
 
     JHub getApp();
+
+    GitHubService provideGitHubService();
 }

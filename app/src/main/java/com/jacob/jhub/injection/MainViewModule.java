@@ -2,6 +2,7 @@ package com.jacob.jhub.injection;
 
 import android.support.annotation.NonNull;
 
+import com.jacob.jhub.api.GitHubService;
 import com.jacob.jhub.interactor.MainInteractor;
 import com.jacob.jhub.interactor.impl.MainInteractorImpl;
 import com.jacob.jhub.presenter.MainPresenter;
@@ -14,18 +15,12 @@ import dagger.Provides;
 @Module
 public final class MainViewModule {
     @Provides
-    public MainInteractor provideInteractor() {
-        return new MainInteractorImpl();
+    public MainInteractor provideInteractor(GitHubService gitHubService) {
+        return new MainInteractorImpl(gitHubService);
     }
 
     @Provides
     public PresenterFactory<MainPresenter> providePresenterFactory(@NonNull final MainInteractor interactor) {
-        return new PresenterFactory<MainPresenter>() {
-            @NonNull
-            @Override
-            public MainPresenter create() {
-                return new MainPresenterImpl(interactor);
-            }
-        };
+        return () -> new MainPresenterImpl(interactor);
     }
 }
