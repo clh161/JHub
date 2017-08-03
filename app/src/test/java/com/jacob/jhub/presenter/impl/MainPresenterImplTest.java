@@ -14,11 +14,14 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Jacob on 4/8/2017.
@@ -29,7 +32,8 @@ public class MainPresenterImplTest {
     @Mock
     MainView mView;
     private MainPresenterImpl mPresenter;
-    Profile mProfile = new Profile();
+    @Mock
+    Profile mProfile;
     List<Repository> mRepositories = new ArrayList<>();
 
     @Before
@@ -72,4 +76,80 @@ public class MainPresenterImplTest {
         verify(mView, times(3)).setListLoading(eq(false));
     }
 
+    /**
+     * Test if the presenter adding repositories from response
+     */
+    @Test
+    public void pullToRefresh() throws Exception {
+        int responseSize = 5;
+        List<Repository> repositories1 = new ArrayList<>();
+        for (int i = 0; i < responseSize; i++) {
+            repositories1.add(new Repository());
+        }
+        doAnswer(invocation -> {
+            HttpResponse<List<Repository>> response = invocation.getArgument(2);
+            response.onSuccess(repositories1);
+            return null;
+        }).when(mInteractor).getRepositories(eq("facebook"), any(Integer.class), any(HttpResponse.class));
+        doAnswer(invocation -> {
+            List<Repository> response = invocation.getArgument(0);
+            assertEquals(responseSize, response.size());
+            for (int i = 0; i < responseSize; i++) {
+                assertTrue(repositories1.get(i) == response.get(i));
+            }
+            assertEquals(responseSize, response.size());
+            return null;
+        }).when(mView).setRepositories(any());
+        mPresenter.onListRequestRefresh();
+    }
+
+    /**
+     * Test if the presenter adding up repository on onListScroll call
+     */
+    @Test
+    public void fetchMore() throws Exception {
+        when(mProfile.getPublicRepos()).thenReturn(1000);
+        int responseSize1 = 5;
+        List<Repository> repositories1 = new ArrayList<>();
+        for (int i = 0; i < responseSize1; i++) {
+            repositories1.add(new Repository());
+        }
+        int responseSize2 = 5;
+        List<Repository> repositories2 = new ArrayList<>();
+        for (int i = 0; i < responseSize2; i++) {
+            repositories2.add(new Repository());
+        }
+        doAnswer(invocation -> {
+            HttpResponse<List<Repository>> response = invocation.getArgument(2);
+            response.onSuccess(repositories1);
+            return null;
+        }).when(mInteractor).getRepositories(eq("facebook"), any(Integer.class), any(HttpResponse.class));
+        doAnswer(invocation -> {
+            List<Repository> response = invocation.getArgument(0);
+            for (int i = 0; i < responseSize1; i++) {
+                assertTrue(repositories1.get(i) == response.get(i));
+            }
+            assertEquals(responseSize1, response.size());
+            return null;
+        }).when(mView).setRepositories(any());
+        mPresenter.onListScroll(10, 10);
+        //second fetch
+        doAnswer(invocation -> {
+            HttpResponse<List<Repository>> response = invocation.getArgument(2);
+            response.onSuccess(repositories2);
+            return null;
+        }).when(mInteractor).getRepositories(eq("facebook"), any(Integer.class), any(HttpResponse.class));
+        doAnswer(invocation -> {
+            List<Repository> response = invocation.getArgument(0);
+            assertEquals(responseSize1 + responseSize2, response.size());
+            for (int i = 0; i < responseSize1; i++) {
+                assertTrue(repositories1.get(i) == response.get(i));
+            }
+            for (int i = 0; i < responseSize2; i++) {
+                assertTrue(repositories2.get(i) == response.get(i + responseSize1));
+            }
+            return null;
+        }).when(mView).setRepositories(any());
+        mPresenter.onListScroll(10, 10);
+    }
 }
