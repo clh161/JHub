@@ -13,4 +13,6 @@ public interface MainView {
     void updateProfile(Profile profile);
 
     void setRepositories(List<Repository> repositories);
+
+    void setListLoading(boolean loading);
 }

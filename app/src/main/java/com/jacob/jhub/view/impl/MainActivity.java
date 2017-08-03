@@ -81,4 +81,9 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
         mAdapter.setItems(repositories);
         mAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void setListLoading(boolean loading) {
+        mSwipeRefreshLayout.setRefreshing(loading);
+    }
 }

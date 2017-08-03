@@ -19,6 +19,7 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     private final MainInteractor mInteractor;
     private final String mOrgName = "facebook";
     private int mCurrentPage = 0;
+    private boolean mIsListLoading = false;
 
 
     @Inject
@@ -29,6 +30,8 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     @Override
     public void onStart(boolean viewCreated) {
         super.onStart(viewCreated);
+        //In case a async http call finishes while the app is on background and unable to update the view, this setListLoading may update the view once it comes back to foreground
+        setListLoading(mIsListLoading);
         if (viewCreated) {
             mCurrentPage = 1;
             updateProfile();
@@ -37,19 +40,28 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     }
 
     private void updateRepositories(int page) {
+        setListLoading(true);
         mInteractor.getRepositories(mOrgName, page, new HttpResponse<List<Repository>>() {
             @Override
             public void onSuccess(List<Repository> repositories) {
+                setListLoading(false);
                 if (mView != null)
                     mView.setRepositories(repositories);
             }
 
             @Override
             public void onFailture(Exception e) {
+                setListLoading(mIsListLoading);
                 if (e.getMessage() != null)
                     Log.e(getClass().getSimpleName(), e.getMessage());
             }
         });
+    }
+
+    private void setListLoading(boolean loading) {
+        mIsListLoading = loading;
+        if (mView != null)
+            mView.setListLoading(loading);
     }
 
     private void updateProfile() {
