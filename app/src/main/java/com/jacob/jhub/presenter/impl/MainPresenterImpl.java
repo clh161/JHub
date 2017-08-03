@@ -66,4 +66,10 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
             }
         });
     }
+
+    @Override
+    public void onListRequestRefresh() {
+        mCurrentPage = 1;
+        updateRepositories(mCurrentPage);
+    }
 }

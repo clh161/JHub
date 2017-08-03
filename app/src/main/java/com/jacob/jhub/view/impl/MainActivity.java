@@ -2,6 +2,7 @@ package com.jacob.jhub.view.impl;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
@@ -39,6 +40,8 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     TextView mRepoCount;
     @BindView(R.id.list)
     RecyclerView mList;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private RepositoryAdapter mAdapter = new RepositoryAdapter();
 
     @Override
@@ -48,6 +51,7 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
         ButterKnife.bind(this);
         mList.setLayoutManager(new LinearLayoutManager(this));
         mList.setAdapter(mAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.onListRequestRefresh());
     }
 
     @Override
