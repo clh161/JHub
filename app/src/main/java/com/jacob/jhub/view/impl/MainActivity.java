@@ -44,15 +44,27 @@ public final class MainActivity extends BaseActivity<MainPresenter, MainView> im
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private RepositoryAdapter mAdapter = new RepositoryAdapter();
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mList.setLayoutManager(new LinearLayoutManager(this));
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mList.setLayoutManager(mLinearLayoutManager);
         mList.setAdapter(mAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.onListRequestRefresh());
+        mList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView,
+                                   int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int totalItemCount = mLinearLayoutManager.getItemCount();
+                int lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
+                mPresenter.onListScroll(totalItemCount, lastVisibleItem);
+            }
+        });
     }
 
     @Override

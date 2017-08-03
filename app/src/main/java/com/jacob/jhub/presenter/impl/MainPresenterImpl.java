@@ -10,6 +10,7 @@ import com.jacob.jhub.model.Repository;
 import com.jacob.jhub.presenter.MainPresenter;
 import com.jacob.jhub.view.MainView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,7 +21,8 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
     private final String mOrgName = "facebook";
     private int mCurrentPage = 0;
     private boolean mIsListLoading = false;
-
+    private int mListLoadMoreThreshold = 5;
+    private List<Repository> mRepositories = new ArrayList<>();
 
     @Inject
     public MainPresenterImpl(@NonNull MainInteractor interactor) {
@@ -45,8 +47,9 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
             @Override
             public void onSuccess(List<Repository> repositories) {
                 setListLoading(false);
+                mRepositories.addAll(repositories);
                 if (mView != null)
-                    mView.setRepositories(repositories);
+                    mView.setRepositories(mRepositories);
             }
 
             @Override
@@ -88,7 +91,18 @@ public final class MainPresenterImpl extends BasePresenterImpl<MainView> impleme
 
     @Override
     public void onListRequestRefresh() {
-        mCurrentPage = 1;
-        updateRepositories(mCurrentPage);
+        if (!mIsListLoading) {
+            mCurrentPage = 1;
+            mRepositories.clear();
+            updateRepositories(mCurrentPage);
+        }
+    }
+
+    @Override
+    public void onListScroll(int totalItemCount, int lastVisibleItem) {
+        if (!mIsListLoading && totalItemCount <= (lastVisibleItem + mListLoadMoreThreshold)) {
+            mCurrentPage++;
+            updateRepositories(mCurrentPage);
+        }
     }
 }
