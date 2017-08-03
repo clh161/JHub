@@ -3,12 +3,16 @@ package com.jacob.jhub.presenter.impl;
 import com.jacob.jhub.api.HttpResponse;
 import com.jacob.jhub.interactor.MainInteractor;
 import com.jacob.jhub.model.Profile;
+import com.jacob.jhub.model.Repository;
 import com.jacob.jhub.view.MainView;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -24,8 +28,8 @@ public class MainPresenterImplTest {
     @Mock
     MainView mView;
     private MainPresenterImpl mPresenter;
-    @Mock
-    Profile mProfile;
+    Profile mProfile = new Profile();
+    List<Repository> mRepositories = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
@@ -33,8 +37,13 @@ public class MainPresenterImplTest {
         doAnswer(invocation -> {
             HttpResponse<Profile> response = invocation.getArgument(1);
             response.onSuccess(mProfile);
-            return invocation.getArgument(1);
+            return null;
         }).when(mInteractor).getProfile(eq("facebook"), any(HttpResponse.class));
+        doAnswer(invocation -> {
+            HttpResponse<List<Repository>> response = invocation.getArgument(2);
+            response.onSuccess(mRepositories);
+            return null;
+        }).when(mInteractor).getRepositories(eq("facebook"), any(Integer.class), any(HttpResponse.class));
         mPresenter = new MainPresenterImpl(mInteractor);
         mPresenter.onViewAttached(mView);
         mPresenter.onStart(true);
@@ -45,6 +54,12 @@ public class MainPresenterImplTest {
     public void fetchProfileOnInit() throws Exception {
         verify(mInteractor).getProfile(eq("facebook"), any(HttpResponse.class));
         verify(mView).updateProfile(mProfile);
+    }
+
+    @Test
+    public void fetchRepositoryOnInit() throws Exception {
+        verify(mInteractor).getRepositories(eq("facebook"), eq(1), any(HttpResponse.class));
+        verify(mView).setRepositories(any());
     }
 
 }
