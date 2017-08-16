@@ -1,4 +1,4 @@
-## JHub
+## JHub [![Build Status](https://travis-ci.org/clh161/JHub.svg?branch=master)](https://travis-ci.org/clh161/JHub)
 This is a showcase app created to fetches facebook’s repositories from Github and displays as a list of information.
 
 # Specs
