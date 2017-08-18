@@ -1,4 +1,6 @@
 ## JHub [![Build Status](https://travis-ci.org/clh161/JHub.svg?branch=master)](https://travis-ci.org/clh161/JHub)
+
+[![Join the chat at https://gitter.im/clh161-JHub/Lobby](https://badges.gitter.im/clh161-JHub/Lobby.svg)](https://gitter.im/clh161-JHub/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 This is a showcase app created to fetches facebook’s repositories from Github and displays as a list of information.
 
 # Specs
