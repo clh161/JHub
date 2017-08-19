@@ -1,5 +1,7 @@
 package com.jacob.jhub.interactor.impl;
 
+import android.os.AsyncTask;
+
 import com.jacob.jhub.api.GitHubService;
 import com.jacob.jhub.api.HttpResponse;
 import com.jacob.jhub.interactor.MainInteractor;
@@ -24,7 +26,7 @@ public final class MainInteractorImpl implements MainInteractor {
     @Override
     public void getProfile(String orgName, HttpResponse<Profile> response) {
         mGitHubService.getProfile(orgName)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response::onSuccess, e -> response.onFailture((Exception) e));
     }
@@ -32,7 +34,7 @@ public final class MainInteractorImpl implements MainInteractor {
     @Override
     public void getRepositories(String orgName, int page, HttpResponse<List<Repository>> response) {
         mGitHubService.getRepositories(orgName, page)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.from(AsyncTask.THREAD_POOL_EXECUTOR))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response::onSuccess, e -> response.onFailture((Exception) e));
     }
