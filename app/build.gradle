@@ -23,6 +23,9 @@ android {
         jackOptions {
             enabled true
         }
+        lintOptions {
+            abortOnError false
+        }
     }
     buildTypes {
         release {
