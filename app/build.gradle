@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
+apply plugin: 'org.sonarqube'
 
 buildscript {
     repositories {
@@ -36,6 +37,16 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+}
+
+sonarqube{
+    properties {
+        property "sonar.projectName", "JHub"
+        property "sonar.projectKey", "jhub"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.organization", "clh161"
+        property "sonar.login", "19cb71d8c5dfe426bf7e6eb901e31cc1c202e4a6"
     }
 }
 
