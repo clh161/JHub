@@ -1,22 +1,39 @@
 language: android
+install: true
+addons:
+  sonarcloud:
+    organization:
+    - sonarqube_organization_key
+    token:
+      secure:
+      - sonarqube_token
 jdk:
-  - oraclejdk8
+- oraclejdk8
 env:
   global:
-    - ANDROID_TARGET=android-21
-    - ANDROID_ABI=armeabi-v7a
+  - ANDROID_TARGET=android-21
+  - ANDROID_ABI=armeabi-v7a
+  - secure: hKMgsKyyWzmw76CGIeEfmKWAmbos+6le9nJOI6m9Qi7EEfRZLhkODg1vGQNHQwVQ7y5JtFQKt7LnOakFx+vPACY5aaFWNZqybFqQ+w6TWJYakRESJaSnZUqvVqj6fE6j0uGoBxKXo0vGtbOECwsOWm22cnPSvmC9aqh2s5SCoDmdIJpluYCn9IJdQcu/Io1l274ARI4oKBgl6mNYGUxia0SV+xZyqnXy3TMTYd8xMShjU8Ly6GpzTvwn+R/tDEXDyjkRc1/99TFTphJIa3XvCQZ1qLGm3P9CZASpn5tthWiUWuLDDyaZEejc/g1oAGUak6ICmaP33Ony5v1lZutu9ovIrElY0nFnbzGx8T5F9eZCnyb8DpeYSiTbqEX+Y74wyhWTJZkbEKPotakUy6OjettgehUEXj5o6uhPW+jO5VooKv4eubSc227F4UUSZ7NkQr3l5XIoSYxiwsbOm0dMqgNy182qylJDAZtxO67z8+ky4aJaO29rFLqJhtjpB+Gml9/lqznpBTIWpiw0deIVGGwPKuwIAwbTlIDiH1f6ek3pnqhLn30wYxhfvtoICSZpsJGm/NII2G9m6TImh52AX4H3DHSmsedyGL/5blxBsBxRGjEDU1VifOAaEuoG3gbw7cNir3QLL8/WPgp49elurXwF40sbG414Gm2sT5bwFrs=
+  - secure: TZxrGe5K491lKMgeUxJJJsV79bJd5+pGvIPRTRV6mM3CRJ1fzQo/glvejx1hoZ38z+S+TlzbJxwQDHAmYyBHcfoZoHSqGeq1NiNYoatwIZKt0EtyBuOPnApWG3yPRMYSuZXzRy5uA6vWbckMmnwcvgH47Mgzz7Ed6++wUwzp2PZ16mMJW2Pp/bnpUlBCCXsiu2K0KOy9qmom2osjfQo0aoCY+LXMca+1Z+yke2z+FYX6iYSwrz/CYNFoElczbFs+wKeeiJE5srIgj+DemtHch3gC/vKdIkjijfgDIxtPRwZhe2m45IjXKuWJhjlSS+5RN0pIrzU9iFhviXA46xWHIN46glajCNZaXTyRRaawNdfP6tlQy85sHgu9YXvkciF67A4CyTjoxKKmgz1rD8lggOMALml5UAM/PDXV0D2LsE4vnUM899Gt52Ih4CEF+JqrqXWsCdTAhHB9MlBCMVs9uettSuz2vg4U2SXBYxa005kyCWVYkzVEmdia8mLpSJE8SPxX6gf3eycM5xHmYCLy40apYeJSwVpr3AzLERB8ZWeOXDAwup8IgobNXmMSQ85hWfMt1ukSrXQx/HlA1SSnPKHDGyv8/LwjqyCz7N3eKs7gcpV6L1W1VK36FdUbEPzDYe0dgrRu2akvl75eG9GJSyJkCqIXm8BpfcSyWKpxs6c=
 android:
   components:
-    - build-tools-26.0.1
-    - android-21
-    - android-26
-    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+  - build-tools-26.0.1
+  - android-21
+  - android-26
+  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 script:
-  - ./gradlew build jacocoTestReport assembleAndroidTest
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
-  - ./gradlew connectedCheck
+- "./gradlew build jacocoTestReport assembleAndroidTest"
+- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+- emulator -avd test -no-skin -no-audio -no-window &
+- android-wait-for-emulator
+- adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
+- "./gradlew sonarqube"
+- "./gradlew connectedCheck"
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+cache:
+  directories:
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
+  - "$HOME/.gradle"
+  - ".gradle"
