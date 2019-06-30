@@ -1,4 +1,5 @@
 ## JHub 
+[![CodeFactor](https://www.codefactor.io/repository/github/clh161/jhub/badge)](https://www.codefactor.io/repository/github/clh161/jhub)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2a3bae7eaaaf4047b60d121240b4ae58)](https://app.codacy.com/app/clh161/JHub?utm_source=github.com&utm_medium=referral&utm_content=clh161/JHub&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/clh161/JHub.svg?branch=master)](https://travis-ci.org/clh161/JHub)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/clh161-JHub/Lobby)
