@@ -62,7 +62,7 @@ jacocoAndroidUnitTestReport {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.google.dagger:dagger:2.35'
+    compile 'com.google.dagger:dagger:2.44.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.35.1'
     testCompile 'junit:junit:4.13.2'
     testCompile 'org.mockito:mockito-core:3.8.0'
